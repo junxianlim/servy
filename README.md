@@ -1,6 +1,6 @@
 # Servy
 
-**TODO: Add description**
+A pragmatic prog tutorial on building web servers using Elixir.
 
 ## Installation
 
