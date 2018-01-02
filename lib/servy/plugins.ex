@@ -10,6 +10,10 @@ defmodule Servy.Plugins do
 
   def track(conv), do: conv
 
+  def put_content_length(conv) do
+    Conv.put_content_length(conv)
+  end
+
   def rewrite_path(%Conv{ path: "/wildlife" } = conv) do
     %Conv{ conv | path: "/wildthingcd .s" }
   end

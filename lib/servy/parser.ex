@@ -13,7 +13,7 @@ defmodule Servy.Parser do
 
     %Conv{ 
       method: method, 
-      path: path, status: nil, 
+      path: path, status: nil,
       params: params,
       headers: headers,
     }
@@ -27,11 +27,18 @@ defmodule Servy.Parser do
       iex> params_string = "name=Baloo&type=Brown"
       iex> Servy.Parser.parse_params("application/x-www-form-urlencoded", params_string) 
       %{"name" => "Baloo", "type" => "Brown"}
+      iex> json_string = "{\\"name\\": \\"Breezly\\", \\"type\\": \\"Polar\\"}\\n"
+      iex> Servy.Parser.parse_params("application/json", json_string)
+      %{"name" => "Breezly", "type" => "Polar"}
       iex> Servy.Parser.parse_params("multipart/form-data", params_string)
       %{}
   """
   def parse_params("application/x-www-form-urlencoded", params_string) do
     params_string |> String.trim |> URI.decode_query
+  end
+
+  def parse_params("application/json", params_string) do
+    Poison.decode!(params_string)
   end
 
   def parse_params(_, _), do: %{}

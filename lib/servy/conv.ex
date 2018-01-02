@@ -1,6 +1,10 @@
 defmodule Servy.Conv do
   defstruct method: "", 
             path: "", 
+            resp_headers: %{ 
+              "Content-Type" => "text/html",
+              "Content-Length" => "",
+            },
             resp_body: "", 
             params: %{},
             headers: %{},
@@ -19,5 +23,13 @@ defmodule Servy.Conv do
       404 => "Not Found",
       500 => "Internal Server Error",
     }[code]
+  end
+
+  def put_resp_content_type(conv, content_type) do
+    %{ conv | resp_headers: %{ conv.resp_headers | "Content-Type" => content_type } }
+  end
+
+  def put_content_length(conv) do
+    %{ conv | resp_headers: %{ conv.resp_headers | "Content-Length" => byte_size(conv.resp_body) } }
   end
 end
