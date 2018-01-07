@@ -1,24 +1,16 @@
 # Servy
 
 A pragmatic prog tutorial on building web servers using Elixir.
+Find them here! [URL](https://pragmaticstudio.com/courses/elixir)
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `servy` to your list of dependencies in `mix.exs`:
+- `mix deps.get` to fetch dependencies
+- `mix run` to start server!
+- All routes are in the `handler.ex` file. Have Fun!
 
-```elixir
-def deps do
-  [
-    {:servy, "~> 0.1.0"}
-  ]
-end
-```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/servy](https://hexdocs.pm/servy).
+<!-- Personal Learning Notes -->
 
-<!-- Good Notes -->
-
+- `:atoms` are not garbage collected, use `strings` for user params!
 - `:observer.start` = fun!
