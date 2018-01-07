@@ -1,44 +1,45 @@
 defmodule Servy.FourOhFourCounter do
   @name :four_oh_four_counter
+  alias Servy.GenericServer
 
   def start do
-    pid = spawn(__MODULE__, :listen_loop, [%{}])
-    Process.register(pid, @name)
-    pid
+    GenericServer.start(__MODULE__, @name, %{})
   end
 
   def bump_count(url) do
-    send @name, { self(), :bump_count, url }
-    receive do {:response, message} -> message end
+    GenericServer.call @name, { :bump_count, url }
   end
 
   def get_count(url) do
-    send @name, { self(), :get_count, url }
-    receive do {:response, count } -> count end
+    GenericServer.call @name, { :get_count, url }
   end
   
   def get_counts do
-    send @name, { self(), :get_counts }
-    receive do {:response, counts } -> counts end
+    GenericServer.call @name, :get_counts
   end
 
-  def listen_loop(state) do
-    receive do
-      {sender, :bump_count, url } ->
-        new_state = add_url_count(state, url)
-        send sender, {:response, "Added new count!"}
-        listen_loop(new_state)
-      {sender, :get_count, url } ->
-        count = Map.get(state, url)
-        send sender, {:response, count}
-        listen_loop(state)
-      {sender, :get_counts} ->
-        send sender, {:response, state}
-        listen_loop(state)
-      unexpected ->
-        IO.puts "Unexpected message: #{inspect unexpected}"
-        listen_loop(state)
-    end
+  def clear_counts do
+    GenericServer.cast @name, :clear_counts
+  end
+
+  # Server callbacks
+
+  def handle_call({:bump_count, url}, state) do
+    new_state = add_url_count(state, url)
+    {new_state, new_state}
+  end
+
+  def handle_call({:get_count, url}, state) do
+    count = Map.get(state, url)
+    {count, state}
+  end
+
+  def handle_call(:get_counts, state) do
+    {state, state}
+  end
+
+  def handle_cast(:clear_counts, _state) do
+    %{}
   end
 
   defp add_url_count(state, url) do
