@@ -1,45 +1,50 @@
 defmodule Servy.FourOhFourCounter do
   @name :four_oh_four_counter
-  alias Servy.GenericServer
+  use GenServer
 
   def start do
-    GenericServer.start(__MODULE__, @name, %{})
+    GenServer.start(__MODULE__, %{}, name: @name)
   end
 
   def bump_count(url) do
-    GenericServer.call @name, { :bump_count, url }
+    GenServer.call @name, { :bump_count, url }
   end
 
   def get_count(url) do
-    GenericServer.call @name, { :get_count, url }
+    GenServer.call @name, { :get_count, url }
   end
   
   def get_counts do
-    GenericServer.call @name, :get_counts
+    GenServer.call @name, :get_counts
   end
 
   def clear_counts do
-    GenericServer.cast @name, :clear_counts
+    GenServer.cast @name, :clear_counts
   end
 
   # Server callbacks
 
-  def handle_call({:bump_count, url}, state) do
+  def handle_call({:bump_count, url}, _from, state) do
     new_state = add_url_count(state, url)
-    {new_state, new_state}
+    {:reply, new_state, new_state}
   end
 
-  def handle_call({:get_count, url}, state) do
+  def handle_call({:get_count, url}, _from, state) do
     count = Map.get(state, url)
-    {count, state}
+    {:reply, count, state}
   end
 
-  def handle_call(:get_counts, state) do
-    {state, state}
+  def handle_call(:get_counts, _from, state) do
+    {:reply, state, state}
   end
 
   def handle_cast(:clear_counts, _state) do
-    %{}
+    {:noreply, %{}}
+  end
+
+  def handle_info(other, state) do
+    IO.puts "Can't touch this: #{inspect other}"
+    {:noreply, state}
   end
 
   defp add_url_count(state, url) do

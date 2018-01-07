@@ -4,7 +4,7 @@ defmodule FourOhFourCounterTest do
   alias Servy.FourOhFourCounter, as: Counter
 
   test "reports counts missing path requests" do
-    pid = Counter.start()
+    {:ok, pid} = Counter.start()
 
     Counter.bump_count("/bigfoot")
     Counter.bump_count("/nessie")
@@ -21,7 +21,7 @@ defmodule FourOhFourCounterTest do
   end
 
   test "clears counts" do
-    pid = Counter.start()
+    {:ok, pid} = Counter.start()
 
     Counter.bump_count("/bigfoot")
     Counter.bump_count("/nessie")

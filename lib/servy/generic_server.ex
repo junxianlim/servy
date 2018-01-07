@@ -1,7 +1,7 @@
 defmodule Servy.GenericServer do
 
   # Client Interface
-  def start(callback_module, name, initial_state) do
+  def start(callback_module, initial_state, name) do
     pid = spawn(__MODULE__, :listen_loop, [initial_state, callback_module])
     Process.register(pid, name)
     pid
@@ -25,8 +25,8 @@ defmodule Servy.GenericServer do
       {:cast, message} ->
         new_state = callback_module.handle_cast(message, state)
         listen_loop(new_state, callback_module)
-      unexpected ->
-        IO.puts "Unexpected message: #{inspect unexpected}"
+      other ->
+        new_state = callback_module.handle_info(other, state)
         listen_loop(state, callback_module)
     end
   end
