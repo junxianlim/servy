@@ -1,0 +1,19 @@
+<h1>
+  New Pledge
+</h1>
+
+<form name="new_pledge" action="/pledges" method="post">
+  <div>
+    <label for="name">Name</label>
+    <input type="text" name="name"></input>
+  </div>
+  
+  <div>
+    <label for="amount">Amount</label>
+    <input type="number" name="amount"></input>
+  </div>
+  
+  <div>
+    <input type="submit" value="Pledge">
+  </div>
+</form>

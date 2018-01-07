@@ -4,9 +4,11 @@ defmodule Servy.Handler do
   import Servy.Plugins,         only: [rewrite_path: 1, track: 1, put_content_length: 1]
   import Servy.Parser,          only: [parse: 1]
   import Servy.FileHandler,     only: [fetch_file: 2]
+  alias  Servy.FourOhFourCounter
   alias  Servy.Conv
   alias  Servy.Controllers.BearController
   alias  Servy.Controllers.SensorsController
+  alias  Servy.Controllers.PledgesController
   alias  Servy.Controllers.Api.BearController, as: ApiBearController
 
   @doc "Transforms the request into a response."
@@ -20,11 +22,23 @@ defmodule Servy.Handler do
     |> format_response
   end
 
+  def route(%Conv{ method: "GET", path: "/pledges/new" } = conv) do
+    PledgesController.new(conv)
+  end
+
+  def route(%Conv{ method: "POST", path: "/pledges" } = conv) do
+    PledgesController.create(conv)
+  end
+
+  def route(%Conv{ method: "GET", path: "/pledges" } = conv) do
+    PledgesController.index(conv)
+  end
+  
   def route(%Conv{ method: "GET", path: "/sensors" } = conv) do
     SensorsController.index(conv)
   end
 
-  def route(%Conv{ method: "GET", path: "/faq"} = conv) do
+  def route(%Conv{ method: "GET", path: "/faq" } = conv) do
     conv = fetch_file("faq.md", conv)
     %Conv{ conv | resp_body: Earmark.as_html!(conv.resp_body) }
   end
@@ -59,9 +73,15 @@ defmodule Servy.Handler do
     BearController.delete(conv, params)
   end
 
+  def route(%Conv{ method: "GET", path: "/404s" } = conv) do
+    counters = FourOhFourCounter.get_counts
+    %Conv{ conv | resp_body: inspect counters }
+  end
+
   def route(conv) do
     %Conv{ conv | status: 404, resp_body: "Route not found" }
   end
+
 
   def format_response_headers(conv) do
     Enum.map(conv.resp_headers, fn({k,v}) -> 
