@@ -1,0 +1,8 @@
+<h1>It's here!</h1>
+<h2>lat: <%= location.lat %></h2>
+<h2>lng: <%= location.lng %></h2>
+<ul>
+  <%= for snapshot <- snapshots do %>
+    <li><%= snapshot %></li>
+  <% end %>
+</ul>

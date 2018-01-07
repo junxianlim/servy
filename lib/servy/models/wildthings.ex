@@ -1,5 +1,5 @@
-defmodule Servy.Wildthings do
-  alias Servy.Bear
+defmodule Servy.Models.Wildthings do
+  alias Servy.Models.Bear
 
   @db_path Path.expand("db", File.cwd!)
 

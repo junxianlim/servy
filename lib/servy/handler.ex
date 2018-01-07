@@ -5,10 +5,9 @@ defmodule Servy.Handler do
   import Servy.Parser,          only: [parse: 1]
   import Servy.FileHandler,     only: [fetch_file: 2]
   alias  Servy.Conv
-  alias  Servy.BearController
-  alias  Servy.Api.BearController, as: ApiBearController
-  alias  Servy.VideoCam
-  alias  Servy.Tracker
+  alias  Servy.Controllers.BearController
+  alias  Servy.Controllers.SensorsController
+  alias  Servy.Controllers.Api.BearController, as: ApiBearController
 
   @doc "Transforms the request into a response."
   def handle(request) do
@@ -22,16 +21,7 @@ defmodule Servy.Handler do
   end
 
   def route(%Conv{ method: "GET", path: "/sensors" } = conv) do
-    task = Task.async(fn -> Tracker.get_location("bigfoot") end)
-
-    snapshots = 
-      ["cam-1", "cam-2", "cam-3"]
-      |> Enum.map(&Task.async(fn -> VideoCam.get_snapshot(&1) end))
-      |> Enum.map(&Task.await/1)
-    
-    where_is_bigfoot = Task.await(task)
-
-    %{ conv | resp_body: inspect {snapshots, where_is_bigfoot}}
+    SensorsController.index(conv)
   end
 
   def route(%Conv{ method: "GET", path: "/faq"} = conv) do
