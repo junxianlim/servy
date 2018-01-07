@@ -10,7 +10,7 @@ Find them here! [URL](https://pragmaticstudio.com/courses/elixir)
 - All routes are in the `handler.ex` file. Have Fun!
 
 
-<!-- Personal Learning Notes -->
+## Personal Learning Notes
 
 - `:atoms` are not garbage collected, use `strings` for user params!
 - `:observer.start` = fun!
