@@ -3,7 +3,7 @@ defmodule PlegeServerTest do
   alias Servy.PledgeServer
   
   test "it should create a new pledge" do
-    {:ok, pid} = PledgeServer.start()
+    {:ok, pid} = PledgeServer.start_link([])
     
     PledgeServer.create_pledge("bob", 10)
     
@@ -13,7 +13,7 @@ defmodule PlegeServerTest do
   end
 
   test "it should return 3 most recent pledges" do
-    {:ok, pid} = PledgeServer.start()
+    {:ok, pid} = PledgeServer.start_link([])
     
     [{"bob", 15}, {"adam", 30}, {"jason", 50}, {"jessica", 100}]
     |> Enum.map(fn({name,amount}) -> PledgeServer.create_pledge(name, amount) end)
@@ -24,7 +24,7 @@ defmodule PlegeServerTest do
   end
 
   test "it should set new cache size" do
-    {:ok, pid} = PledgeServer.start()
+    {:ok, pid} = PledgeServer.start_link([])
 
     PledgeServer.set_cache_size(5)
 
@@ -35,7 +35,7 @@ defmodule PlegeServerTest do
   end
 
   test "it should clear cache" do
-    {:ok, pid} = PledgeServer.start()
+    {:ok, pid} = PledgeServer.start_link([])
 
     assert Enum.count(PledgeServer.recent_pledges()) == 2
     PledgeServer.clear()

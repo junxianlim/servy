@@ -11,7 +11,8 @@ use Mix.Config
 # You can configure your application as:
 #
 #     config :servy, key: :value
-#
+#     config :servy, port: 5000
+
 # and access this configuration in your application as:
 #
 #     Application.get_env(:servy, :key)

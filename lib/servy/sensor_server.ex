@@ -2,7 +2,7 @@ defmodule Servy.SensorServer do
 
   @name :sensor_server
 
-  use GenServer
+  use GenServer, restart: :temporary
   alias Servy.Models.VideoCam
   alias Servy.Models.Tracker
 
@@ -10,10 +10,22 @@ defmodule Servy.SensorServer do
     defstruct sensor_data: %{}, refresh_interval: :timer.minutes(60), timer_ref: ""
   end
 
+  # def child_spec(args) do
+  #   IO.inspect args
+  #   %{
+  #     id: __MODULE__,
+  #     start: {__MODULE__, :start_link, [1]},
+  #     restart: :permanent,
+  #     shutdown: 5000,
+  #     type: :worker
+  #   }
+  # end
+
   # Client Interface
 
-  def start do
-    GenServer.start(__MODULE__, %State{}, name: @name)
+  def start_link(interval) do
+    IO.puts "Starting the sensor server with #{inspect interval} refresh"
+    GenServer.start_link(__MODULE__, %State{ refresh_interval: :timer.minutes(interval)}, name: @name)
   end
 
   def get_sensor_data do
